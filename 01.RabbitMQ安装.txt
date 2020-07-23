@@ -1,0 +1,81 @@
+安装erlang环境
+erlang有2种安装方式:
+    1.yum安装erlang:
+        第一步：新增文件 /etc/yum.repos.d/rabbitmq_erlang.repo，在文件里面新增下面内容并保存：
+        [rabbitmq_erlang]
+        name=rabbitmq_erlang
+        baseurl=https://packagecloud.io/rabbitmq/erlang/el/7/$basearch
+        repo_gpgcheck=1
+        gpgcheck=1
+        enabled=1
+        # PackageCloud's repository key and RabbitMQ package signing key
+        gpgkey=https://packagecloud.io/rabbitmq/erlang/gpgkey
+        https://dl.bintray.com/rabbitmq/Keys/rabbitmq-release-signing-key.asc
+        sslverify=1
+        sslcacert=/etc/pki/tls/certs/ca-bundle.crt
+        metadata_expire=300
+        [rabbitmq_erlang-source]
+        name=rabbitmq_erlang-source
+        baseurl=https://packagecloud.io/rabbitmq/erlang/el/7/SRPMS
+        repo_gpgcheck=1
+        gpgcheck=0
+        enabled=1
+        # PackageCloud's repository key and RabbitMQ package signing key
+        gpgkey=https://packagecloud.io/rabbitmq/erlang/gpgkey
+        https://dl.bintray.com/rabbitmq/Keys/rabbitmq-release-signing-key.asc
+        sslverify=1
+        sslcacert=/etc/pki/tls/certs/ca-bundle.crt
+        metadata_expire=300
+        第二步：在centos控制台输入
+        yum install erlang
+        到此erlang环境安装完成
+    2.安装包安装erlang：
+        安装依赖环境
+        yum -y install make gcc gcc-c++ kernel-devel m4 ncurses-devel openssl-devel unixODBC-devel
+        下载Erlang
+        wget http://erlang.org/download/otp_src_21.3.tar.gz
+        解压
+        tar -xvzf otp_src_21.3.tar.gz
+        进入解压后的Erlang目录
+        cd otp_src_21.3
+        构建
+        yum install -y autoconf
+        ./otp_build autoconf
+        配置安装
+        ./configure
+        make && make install
+        配置环境变量
+        vim /etc/profile
+        末尾添加
+        export ERLANG_HOME=/usr/local/lib/erlang #这里写你电脑上面的路径
+        export PATH=$PATH:$ERLANG_HOME/bin
+        重新加载环境变量
+        source /etc/profile
+        查看
+        erl
+2.安装rabbitmq
+    1、下载rpm包
+    wget https://github.com/rabbitmq/rabbitmq-server/releases/download/v3.8.1/rabbitmq-server-3.8.1-1.el7.noarch.rpm
+    2、安装rpm包
+    yum install rabbitmq-server-3.8.1-1.el7.noarch.rpm
+    3、启动rabbitmq
+    rabbitmq-server start
+    加入开机启动：
+    chkconfig rabbitmq-server on
+    4、执行命令，查看rabbitmq的状态
+    rabbitmqctl status
+    至此，rabbitmq安装成功
+
+启用web管理插件，这样子才能支持浏览器访问rabbitmq
+    rabbitmq-plugins enable rabbitmq_management
+设置操作系统字符集utf-8
+    vim /etc/profile
+    文件末尾加上:
+    export LC_ALL=en_US.UTF-8
+    然后执行 :
+    source /etc/profile
+增加远程访问web管理台用户及授权
+    rabbitmqctl add_user test 123456 #增加test用户，密码为123456
+    rabbitmqctl set_user_tags test administrator #添加test角色为 administrator
+    rabbitmqctl set_permissions -p "/" test ".*" ".*" ".*" #给test用户授权
+    rabbitmqctl list_users #查看用户是否已添加

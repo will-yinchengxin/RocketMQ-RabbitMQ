@@ -1,0 +1,14 @@
+参考文献：
+--------------------------------------------基础篇--------------------------------------------
+rabbitmq文档：https://www.rabbitmq.com/tutorials/tutorial-two-php.html
+rabbitmq的4部曲：https://www.cnblogs.com/sgh1023/category/1507545.html
+rabbitMQ安装：https://blog.csdn.net/u010006625/article/details/103783989
+erlang yum安装 https://blog.csdn.net/u010006625/article/details/103783989
+erlang 安装包安装 https://blog.csdn.net/qq_36256944/article/details/89393594
+erlang卸载：解决方法：https://www.cnblogs.com/qinghuaL/p/11597695.html
+--------------------------------------------高级篇--------------------------------------------
+RabbitMQ各方法详解：https://blog.csdn.net/qq_34272964/java/article/details/103937896
+RabbitMQ高级特性理解：https://blog.csdn.net/maihilton/article/details/80928661
+rabbitmq高级特性java版本：https://cloud.tencent.com/developer/article/1452858；https://blog.csdn.net/weixin_42835389/article/details/83241305
+rabbitmq中文文档：https://xiaoxiami.gitbook.io/rabbitmq_into_chinese_php/ying-yong-jiao-cheng/php-ban/2-work_queues.md
+qos方法的使用：https://www.cnblogs.com/oyxp/p/7376733.html
