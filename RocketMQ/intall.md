@@ -24,3 +24,5 @@ brokerIP1 = 本机外网ip地址(ipconfig 即可获取)
 docker run -e "JAVA_OPTS=-Drocketmq.namesrv.addr=192.168.60.66:9876 -Dcom.rocketmq.sendMessageWithVIPChannel=false" -p 8001:8080 -t styletang/rocketmq-console-ng
 `````
 查看主页: `http://localhost:8001`
+
+### [帮助文档](https://juejin.cn/post/6844904008629354504)
