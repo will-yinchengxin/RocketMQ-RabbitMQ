@@ -1,6 +1,6 @@
 # [jdk 安装](https://www.oracle.com/java/technologies/downloads/)
 
-首先确定系统的版本 `uname-a`
+首先确定系统的版本 `uname -a`
 
 ````
 [root@99 ~]# uname -a
