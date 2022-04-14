@@ -40,7 +40,7 @@ JAVA_OPT="${JAVA_OPT} ${JAVA_OPT_EXT}"
 JAVA_OPT="${JAVA_OPT} -cp ${CLASSPATH}"
 ````
 
-- 守护进程⽅式启动 NameServer()： `nohup sh ./bin/mqnamesrv & ` (nohup sh /usr/local/rocketMQ/bin/mqnamesrv &)
+- 守护进程⽅式启动 NameServer()： `nohup sh ./bin/mqnamesrv & ` 
 - 查看启动⽇志： `tail -f ~/logs/rocketmqlogs/namesrv.log `
 
 <img src="assets/image-20220412231417235.png" alt="image-20220412231417235" style="zoom:50%;" />
@@ -62,19 +62,37 @@ JAVA_OPT="${JAVA_OPT} -XX:+UseGCLogFileRotation -XX:NumberOfGCLogFiles=5 -XX:GCL
 JAVA_OPT="${JAVA_OPT} -XX:-OmitStackTraceInFastThrow"
 JAVA_OPT="${JAVA_OPT} -XX:+AlwaysPreTouch"
 ```
+#### 守护进程⽅式启动Broker： `nohup sh bin/mqbroker -n ip:9876 & `
 
-- 守护进程⽅式启动Broker： `nohup sh bin/mqbroker -n ip:9876 & ` (nohup sh /usr/local/rocketMQ/bin/mqbroker -n 172.16.252.99:9876 &)
+这里可以修改一下配置文件
+````
+brokerClusterName = DefaultCluster
+brokerName = broker-a
+brokerId = 0
+deleteWhen = 04
+fileReservedTime = 48
+brokerRole = ASYNC_MASTER
+flushDiskType = ASYNC_FLUSH
 
+## add other info
+brokerIP1=172.16.252.99
+namesrvAddr=172.16.252.99:9876
+`````
+#### 守护进程⽅式启动Broker 并指定配置文件: `nohup sh /usr/local/rocketMQ/bin/mqbroker -n 172.16.252.99:9876 -c /usr/local/rocketMQ/conf/broker.conf  autoCreateTopicEnable=true &`
 ```
-[root@99 rocketMQ]# netstat -nltp
+[root@99 ~]# netstat -nltp
 Active Internet connections (only servers)
 Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name
-tcp        0      0 0.0.0.0:22              0.0.0.0:*               LISTEN      912/sshd
-tcp6       0      0 :::9876                 :::*                    LISTEN      13413/java
-tcp6       0      0 :::22                   :::*                    LISTEN      912/sshd
+tcp        0      0 0.0.0.0:22              0.0.0.0:*               LISTEN      898/sshd
+tcp6       0      0 :::8080                 :::*                    LISTEN      2200/java
+tcp6       0      0 :::9876                 :::*                    LISTEN      2111/java
+tcp6       0      0 :::22                   :::*                    LISTEN      898/sshd
+tcp6       0      0 :::10909                :::*                    LISTEN      2137/java
+tcp6       0      0 :::10911                :::*                    LISTEN      2137/java
+tcp6       0      0 :::10912                :::*                    LISTEN      2137/java
 ```
 
-ip:9876是Name Server服务的地址与端⼝ 
+ip:9876是 Name Server服务的地址与端⼝ 
 
 - 查看启动⽇志： `tail -f ~/logs/rocketmqlogs/broker.log `
 
@@ -135,7 +153,7 @@ checkstyle-checker.xml  classes                maven-archiver     nohup.out     
 ```
 
 - `mv ./rocketmq-console-ng-1.0.0.jar   /usr/local/rocketMQ/lib`   移动至 RockeMQ的工具目录
-- 守护进程⽅式启动rocketmq-console    `nohup java -jar -server -Xms2g -Xmx2g  -Duser.timezone="Asia/Shanghai" -Drocketmq.config.namesrvAddr=172.16.252.99:9876 -Dserver.port=8080 rocketmq-console-ng-1.0.0.jar &`   (nohup java -jar -server -Xms2g -Xmx2g -Duser.timezone="Asia/Shanghai" -Drocketmq.config.namesrvAddr=172.16.252.99:9876 -Dserver.port=8080 /usr/local/rocketMQ/lib/rocketmq-console-ng-1.0.0.jar &)
+- 守护进程⽅式启动rocketmq-console    `nohup java -jar -server -Xms2g -Xmx2g  -Duser.timezone="Asia/Shanghai" -Drocketmq.config.namesrvAddr=172.16.252.99:9876 -Dserver.port=8080 rocketmq-console-ng-1.0.0.jar &`   (nohup java -jar -Duser.timezone="Asia/Shanghai" -Drocketmq.config.namesrvAddr=172.16.252.99:9876 -Dserver.port=8080 /usr/local/rocketMQ/lib/rocketmq-console-ng-1.0.0.jar &)
 - 浏览器访问console控制台： http://ip:8080/
 
 <img src="assets/image-20220413104020234.png" alt="image-20220413104020234" style="zoom:50%;" />
