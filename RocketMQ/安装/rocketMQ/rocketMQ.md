@@ -10,6 +10,14 @@ rocketmq也是基于java的，所以需要先确保jdk已经安装好
 - unzip rocketmq-all-4.7.1-bin-release.zip 
 - cd rocketmq-all-4.7.1-bin-release 
 
+操作目录
+````
+[root@99 rocketMQ]# pwd
+/usr/local/rocketMQ
+[root@99 rocketMQ]# ls
+LICENSE  NOTICE  README.md  benchmark  bin  conf  lib  nohup.out
+````
+
 ### 启动Name Server
 
 - 启动之前先检查⼀下Name Server的jvm配置，避免服务器内存不⾜，导致出现各种问题 `vi ./bin/runserver.sh`
@@ -32,12 +40,12 @@ JAVA_OPT="${JAVA_OPT} ${JAVA_OPT_EXT}"
 JAVA_OPT="${JAVA_OPT} -cp ${CLASSPATH}"
 ````
 
-- 守护进程⽅式启动 NameServer： `nohup sh ./bin/mqnamesrv & `
+- 守护进程⽅式启动 NameServer()： `nohup sh ./bin/mqnamesrv & ` (nohup sh /usr/local/rocketMQ/bin/mqnamesrv &)
 - 查看启动⽇志： `tail -f ~/logs/rocketmqlogs/namesrv.log `
 
 <img src="assets/image-20220412231417235.png" alt="image-20220412231417235" style="zoom:50%;" />
 
-### 	启动 broker
+### 启动 broker
 
 启动之前先检查⼀下Broker的jvm配置，避免服务器内存不⾜，导致出现各种问题, `vi bin/runbroker.sh `
 
@@ -55,7 +63,7 @@ JAVA_OPT="${JAVA_OPT} -XX:-OmitStackTraceInFastThrow"
 JAVA_OPT="${JAVA_OPT} -XX:+AlwaysPreTouch"
 ```
 
-- 守护进程⽅式启动Broker： `nohup sh bin/mqbroker -n ip:9876 & `
+- 守护进程⽅式启动Broker： `nohup sh bin/mqbroker -n ip:9876 & ` (nohup sh /usr/local/rocketMQ/bin/mqbroker -n 172.16.252.99:9876 &)
 
 ```
 [root@99 rocketMQ]# netstat -nltp
@@ -69,6 +77,20 @@ tcp6       0      0 :::22                   :::*                    LISTEN      
 ip:9876是Name Server服务的地址与端⼝ 
 
 - 查看启动⽇志： `tail -f ~/logs/rocketmqlogs/broker.log `
+
+**问题1：启动Broker时报错：**
+````
+Error: VM option ‘UseG1GC’ is experimental and must be enabled via -XX:+UnlockExperimentalVMOptions.
+Error: Could not create the Java Virtual Machine.
+Error: A fatal exception has occurred. Program will exit.
+
+
+解决方法：查看bin/mqbroker的脚本可发现，其中调用了runbroker.sh，编辑runbroker.sh，发现其中有UseG1GC的可选项（实验性的选项），删除这一行即可。
+
+[root@99 rocketMQ]# vim bin/runbroker.sh
+// ..
+JAVA_OPT="${JAVA_OPT} -XX:+UseG1GC -XX:G1HeapRegionSize=16m -XX:G1ReservePercent=25 -XX:InitiatingHeapOccupancyPercent=30 -XX:SoftRefLRUPolicyMSPerMB=0"
+````
 
 ### 启动 console 控制台
 
@@ -113,7 +135,7 @@ checkstyle-checker.xml  classes                maven-archiver     nohup.out     
 ```
 
 - `mv ./rocketmq-console-ng-1.0.0.jar   /usr/local/rocketMQ/lib`   移动至 RockeMQ的工具目录
-- 守护进程⽅式启动rocketmq-console `nohup java -jar -server -Xms2g -Xmx2g  -Duser.timezone="Asia/Shanghai" -Drocketmq.config.namesrvAddr=172.16.252.99:9876 -Dserver.port=8080 rocketmq-console-ng-1.0.0.jar &`
+- 守护进程⽅式启动rocketmq-console    `nohup java -jar -server -Xms2g -Xmx2g  -Duser.timezone="Asia/Shanghai" -Drocketmq.config.namesrvAddr=172.16.252.99:9876 -Dserver.port=8080 rocketmq-console-ng-1.0.0.jar &`   (nohup java -jar -server -Xms2g -Xmx2g -Duser.timezone="Asia/Shanghai" -Drocketmq.config.namesrvAddr=172.16.252.99:9876 -Dserver.port=8080 /usr/local/rocketMQ/lib/rocketmq-console-ng-1.0.0.jar &)
 - 浏览器访问console控制台： http://ip:8080/
 
 <img src="assets/image-20220413104020234.png" alt="image-20220413104020234" style="zoom:50%;" />
