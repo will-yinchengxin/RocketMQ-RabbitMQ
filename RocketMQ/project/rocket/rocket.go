@@ -1,12 +1,14 @@
 package rocket
 
 import (
+	"context"
 	"github.com/apache/rocketmq-client-go/v2"
+	"github.com/apache/rocketmq-client-go/v2/admin"
 	"github.com/apache/rocketmq-client-go/v2/consumer"
+	"github.com/apache/rocketmq-client-go/v2/primitive"
 	"github.com/apache/rocketmq-client-go/v2/producer"
+	"log"
 	_const "rock/const"
-
-	//"github.com/apache/rocketmq-client-go/v2/rlog"
 )
 
 var RocketmqProducerClient rocketmq.Producer
@@ -17,18 +19,42 @@ type RocketmqConfig struct {
 	Host      []string `yaml:"host,omitempty"`
 	Retry     int      `yaml:"retry,omitempty"`
 	GroupName string   `yaml:"groupName,omitempty"`
-	Topic     string `yaml:"topic,omitempty"`
-}
-type TopicMap struct {
-	PreviewMap string `yaml:"preview_map,omitempty"`
+	Topic     string   `yaml:"topic,omitempty"`
 }
 
 func NewRocketmqConfig() *RocketmqConfig {
 	return &RocketmqConfig{
-		Host: []string{_const.RocketHost},
-		Retry: 2,
+		Host:      []string{_const.NameServer},
+		Retry:     2,
 		GroupName: _const.GroupName,
-		Topic: _const.Topic,
+		Topic:     _const.Topic,
+	}
+}
+
+// 创建 topic
+func CreateTopic() {
+	testAdmin, err := admin.NewAdmin(admin.WithResolver(primitive.NewPassthroughResolver([]string{_const.NameServer})))
+	err = testAdmin.CreateTopic(
+		context.Background(),
+		admin.WithTopicCreate("newTopic"),
+		admin.WithBrokerAddrCreate(_const.Broker),
+	)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+// 删除 topic
+func DeleteTopic() {
+	testAdmin, err := admin.NewAdmin(admin.WithResolver(primitive.NewPassthroughResolver([]string{_const.NameServer})))
+	err = testAdmin.DeleteTopic(
+		context.Background(),
+		admin.WithTopicDelete("newTopic"),
+		admin.WithBrokerAddrDelete(_const.Broker),
+		//admin.WithNameSrvAddr(nameSrvAddr),
+	)
+	if err != nil {
+		log.Fatal(err)
 	}
 }
 
