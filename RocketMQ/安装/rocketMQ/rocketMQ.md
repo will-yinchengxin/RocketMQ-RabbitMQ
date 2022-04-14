@@ -1,6 +1,6 @@
 # [RocketMQ](http://rocketmq.apache.org/)
 
-## CentOS8 安装
+## 1.CentOS8 安装
 
 rocketmq也是基于java的，所以需要先确保jdk已经安装好
 
@@ -18,7 +18,7 @@ rocketmq也是基于java的，所以需要先确保jdk已经安装好
 LICENSE  NOTICE  README.md  benchmark  bin  conf  lib  nohup.out
 ````
 
-### 启动Name Server
+### 1.1 启动Name Server
 
 - 启动之前先检查⼀下Name Server的jvm配置，避免服务器内存不⾜，导致出现各种问题 `vi ./bin/runserver.sh`
 
@@ -45,7 +45,7 @@ JAVA_OPT="${JAVA_OPT} -cp ${CLASSPATH}"
 
 <img src="assets/image-20220412231417235.png" alt="image-20220412231417235" style="zoom:50%;" />
 
-### 启动 broker
+### 1.2 启动 broker
 
 启动之前先检查⼀下Broker的jvm配置，避免服务器内存不⾜，导致出现各种问题, `vi bin/runbroker.sh `
 
@@ -91,10 +91,8 @@ tcp6       0      0 :::10909                :::*                    LISTEN      
 tcp6       0      0 :::10911                :::*                    LISTEN      2137/java
 tcp6       0      0 :::10912                :::*                    LISTEN      2137/java
 ```
+ip:9876是 Name Server服务的地址与端⼝, 查看启动⽇志： `tail -f ~/logs/rocketmqlogs/broker.log `
 
-ip:9876是 Name Server服务的地址与端⼝ 
-
-- 查看启动⽇志： `tail -f ~/logs/rocketmqlogs/broker.log `
 
 **问题1：启动Broker时报错：**
 ````
@@ -109,8 +107,7 @@ Error: A fatal exception has occurred. Program will exit.
 // ..
 JAVA_OPT="${JAVA_OPT} -XX:+UseG1GC -XX:G1HeapRegionSize=16m -XX:G1ReservePercent=25 -XX:InitiatingHeapOccupancyPercent=30 -XX:SoftRefLRUPolicyMSPerMB=0"
 ````
-
-### 启动 console 控制台
+### 1.3 启动 console 控制台
 
 [下载地址](https://github.com/apache/rocketmq-externals/tree/release-rocketmq-console-1.0.0)
 
