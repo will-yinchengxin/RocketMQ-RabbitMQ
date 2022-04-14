@@ -1,7 +1,8 @@
 package _const
 
 const (
-	GroupName  = "test-rocket"
-	Topic      = "test-rocket"
-	RocketHost = "127.0.0.1:9876"
+	GroupName  = "willGroup"
+	Topic      = "willTopic"
+	NameServer = "172.16.252.99:9876"
+	Broker     = "172.16.252.99:10909"
 )
