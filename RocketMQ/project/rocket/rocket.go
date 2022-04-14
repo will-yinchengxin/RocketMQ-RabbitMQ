@@ -2,6 +2,7 @@ package rocket
 
 import (
 	"context"
+	"fmt"
 	"github.com/apache/rocketmq-client-go/v2"
 	"github.com/apache/rocketmq-client-go/v2/admin"
 	"github.com/apache/rocketmq-client-go/v2/consumer"
@@ -26,7 +27,7 @@ func NewRocketmqConfig() *RocketmqConfig {
 	return &RocketmqConfig{
 		Host:      []string{_const.NameServer},
 		Retry:     2,
-		GroupName: _const.GroupName,
+		GroupName: _const.BrokerName,
 		Topic:     _const.Topic,
 	}
 }
@@ -36,7 +37,7 @@ func CreateTopic() {
 	testAdmin, err := admin.NewAdmin(admin.WithResolver(primitive.NewPassthroughResolver([]string{_const.NameServer})))
 	err = testAdmin.CreateTopic(
 		context.Background(),
-		admin.WithTopicCreate("newTopic"),
+		admin.WithTopicCreate(_const.Topic),
 		admin.WithBrokerAddrCreate(_const.Broker),
 	)
 	if err != nil {
@@ -73,7 +74,7 @@ func InitRocket() {
 	// 生产者
 	err = RocketmqProducerClient.Start()
 	if err != nil {
-		panic(err)
+		fmt.Printf("start producer error: %s", err.Error())
 	}
 
 	// 消费者
@@ -83,8 +84,9 @@ func InitRocket() {
 		consumer.WithGroupName(rocket.GroupName),
 	)
 	if err != nil {
-		panic(err)
+		fmt.Printf("start consumer error: %s", err.Error())
 	}
+	log.Print("init rocketMQ success")
 }
 
 func Close() {
