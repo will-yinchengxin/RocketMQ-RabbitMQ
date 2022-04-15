@@ -27,8 +27,8 @@ LICENSE  NOTICE  README.md  benchmark  bin  conf  lib  nohup.out
 ````
 choose_gc_log_directory
 
-// 堆内存默认给了4G，⽐较占⽤内存了，如果只是开发测试环境，建议调⼩jvm的配置, 这里整体缩小了 1/2 倍
-JAVA_OPT="${JAVA_OPT} -server -Xms2g -Xmx2g -Xmn1g -XX:MetaspaceSize=128m -XX:MaxMetaspaceSize=320m"
+// 堆内存默认给了4G，⽐较占⽤内存了，如果只是开发测试环境，建议调⼩jvm的配置, 由于在虚拟机使用, 内存占用变小一些
+JAVA_OPT="${JAVA_OPT} -server -Xms512m -Xmx512m -Xmn256m -XX:MetaspaceSize=128m -XX:MaxMetaspaceSize=320m"
 JAVA_OPT="${JAVA_OPT} -XX:+UseConcMarkSweepGC -XX:+UseCMSCompactAtFullCollection -XX:CMSInitiatingOccupancyFraction=70 -XX:+CMSParallelRemarkEnabled -XX:SoftRefLRUPolicyMSPerMB=0 -XX:+CMSClassUnloadingEnabled -XX:SurvivorRatio=8  -XX:-UseParNewGC"
 JAVA_OPT="${JAVA_OPT} -verbose:gc -Xloggc:${GC_LOG_DIR}/rmq_srv_gc_%p_%t.log -XX:+PrintGCDetails"
 JAVA_OPT="${JAVA_OPT} -XX:+UseGCLogFileRotation -XX:NumberOfGCLogFiles=5 -XX:GCLogFileSize=30m"
@@ -55,7 +55,7 @@ JAVA_OPT="${JAVA_OPT} -cp ${CLASSPATH}"
 choose_gc_log_directory
 
 // 由于在虚拟机使用, 这里统一变为原来的 1/4
-JAVA_OPT="${JAVA_OPT} -server -Xms2g -Xmx2g -Xmn1g"
+JAVA_OPT="${JAVA_OPT} -server -Xms521m -Xmx512m -Xmn256m"
 JAVA_OPT="${JAVA_OPT} -XX:+UseG1GC -XX:G1HeapRegionSize=16m -XX:G1ReservePercent=25 -XX:InitiatingHeapOccupancyPercent=30 -XX:SoftRefLRUPolicyMSPerMB=0"
 JAVA_OPT="${JAVA_OPT} -verbose:gc -Xloggc:${GC_LOG_DIR}/rmq_broker_gc_%p_%t.log -XX:+PrintGCDetails -XX:+PrintGCDateStamps -XX:+PrintGCApplicationStoppedTime -XX:+PrintAdaptiveSizePolicy"
 JAVA_OPT="${JAVA_OPT} -XX:+UseGCLogFileRotation -XX:NumberOfGCLogFiles=5 -XX:GCLogFileSize=30m"
@@ -152,6 +152,15 @@ checkstyle-checker.xml  classes                maven-archiver     nohup.out     
 - `mv ./rocketmq-console-ng-1.0.0.jar   /usr/local/rocketMQ/lib`   移动至 RockeMQ的工具目录
 - 守护进程⽅式启动rocketmq-console    `nohup java -jar -server -Xms2g -Xmx2g  -Duser.timezone="Asia/Shanghai" -Drocketmq.config.namesrvAddr=172.16.252.99:9876 -Dserver.port=8080 rocketmq-console-ng-1.0.0.jar &`   (nohup java -jar -Duser.timezone="Asia/Shanghai" -Drocketmq.config.namesrvAddr=172.16.252.99:9876 -Dserver.port=8080 /usr/local/rocketMQ/lib/rocketmq-console-ng-1.0.0.jar &)
 - 浏览器访问console控制台： http://ip:8080/
+
+**验证所有部分启动完成**
+````
+[root@99 ~]# jps
+11072 Jps
+1908 BrokerStartup
+1961 rocketmq-console-ng-1.0.0.jar
+1882 NamesrvStartup
+````
 
 <img src="assets/image-20220413104020234.png" alt="image-20220413104020234" style="zoom:50%;" />
 
