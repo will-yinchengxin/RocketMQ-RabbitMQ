@@ -45,6 +45,14 @@ JAVA_OPT="${JAVA_OPT} -cp ${CLASSPATH}"
 
 <img src="assets/image-20220412231417235.png" alt="image-20220412231417235" style="zoom:50%;" />
 
+使用 mqadmin 查看信息
+````
+[root@99 bin]# ./mqadmin clusterList -n 172.16.252.99:9876
+RocketMQLog:WARN No appenders could be found for logger (io.netty.util.internal.PlatformDependent0).
+RocketMQLog:WARN Please initialize the logger system properly.
+#Cluster Name     #Broker Name            #BID  #Addr                  #Version                #InTPS(LOAD)       #OutTPS(LOAD) #PCWait(ms) #Hour #SPACE
+DefaultCluster    broker-a                0     172.16.252.99:10911    V4_7_1                   0.00(0,0ms)         0.00(0,0ms)          0 458323.37 0.4503
+````
 ### 1.2 启动 broker
 
 启动之前先检查⼀下Broker的jvm配置，避免服务器内存不⾜，导致出现各种问题, `vi bin/runbroker.sh `
