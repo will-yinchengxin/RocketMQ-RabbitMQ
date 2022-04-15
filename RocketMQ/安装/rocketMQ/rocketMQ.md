@@ -54,7 +54,7 @@ JAVA_OPT="${JAVA_OPT} -cp ${CLASSPATH}"
 ```
 choose_gc_log_directory
 
-// 由于在虚拟机使用, 这里统一变为原来的 1/4
+// 由于在虚拟机使用, 根据实际情况进行缩小
 JAVA_OPT="${JAVA_OPT} -server -Xms521m -Xmx512m -Xmn256m"
 JAVA_OPT="${JAVA_OPT} -XX:+UseG1GC -XX:G1HeapRegionSize=16m -XX:G1ReservePercent=25 -XX:InitiatingHeapOccupancyPercent=30 -XX:SoftRefLRUPolicyMSPerMB=0"
 JAVA_OPT="${JAVA_OPT} -verbose:gc -Xloggc:${GC_LOG_DIR}/rmq_broker_gc_%p_%t.log -XX:+PrintGCDetails -XX:+PrintGCDateStamps -XX:+PrintGCApplicationStoppedTime -XX:+PrintAdaptiveSizePolicy"
@@ -74,9 +74,10 @@ fileReservedTime = 48
 brokerRole = ASYNC_MASTER
 flushDiskType = ASYNC_FLUSH
 
-## add other info
-brokerIP1=172.16.252.99
-namesrvAddr=172.16.252.99:9876
+## add other info(自行添加的信息)
+brokerIP1=172.16.252.99        # 执行ip, 虚拟机ip
+namesrvAddr=172.16.252.99:9876 # 置顶nameserver
+autoCreateTopicEnable=true     # 允许自行创建topic
 `````
 #### 守护进程⽅式启动Broker 并指定配置文件: `nohup sh /usr/local/rocketMQ/bin/mqbroker -n 172.16.252.99:9876 -c /usr/local/rocketMQ/conf/broker.conf  autoCreateTopicEnable=true &`
 ```
