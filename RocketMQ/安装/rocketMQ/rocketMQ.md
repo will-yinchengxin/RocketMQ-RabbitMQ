@@ -41,11 +41,12 @@ JAVA_OPT="${JAVA_OPT} -cp ${CLASSPATH}"
 ````
 
 - 守护进程⽅式启动 NameServer()： `nohup sh ./bin/mqnamesrv & ` 
-- 查看启动⽇志： `tail -f ~/logs/rocketmqlogs/namesrv.log `
+
+查看启动⽇志信息： `tail -f ~/logs/rocketmqlogs/namesrv.log `
 
 <img src="assets/image-20220412231417235.png" alt="image-20220412231417235" style="zoom:50%;" />
 
-使用 mqadmin 查看信息
+mqadmin 查看信息
 ````
 [root@99 bin]# ./mqadmin clusterList -n 172.16.252.99:9876
 RocketMQLog:WARN No appenders could be found for logger (io.netty.util.internal.PlatformDependent0).
