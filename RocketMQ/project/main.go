@@ -1,25 +1,51 @@
 package main
 
 import (
-	"fmt"
+	"github.com/fvbock/endless"
+	"github.com/gin-gonic/gin"
+	"log"
+	"net/http"
+	"rock/core"
+	"rock/redis"
 	"rock/rocket"
-	"time"
 )
 
-func main() {
-	// 初始化连接
+func init() {
 	rocket.InitRocket()
-	defer rocket.Close()
-	// 生产者
-	//pro := rocket.Producer{}
-	//pro.Send()
+	redis.InitRedis()
+}
 
+func main() {
+	r := gin.Default()
 
-	// 消费者
-	for {
-		con := rocket.Consumer{}
-		con.Start()
-		time.Sleep(time.Second*2)
-		fmt.Println("get message!")
+	r.GET("/rocket", func(c *gin.Context) {
+		// 初始化连接
+		rocket.CreateTopic()
+		c.String(http.StatusOK, "init rocket")
+	})
+	r.GET("/send", func(c *gin.Context) {
+		// 初始化连接
+		pro := rocket.Producer{}
+		res, _ := pro.Send()
+
+		c.JSON(http.StatusOK, res)
+	})
+	r.GET("/consume", func(c *gin.Context) {
+		// 初始化连接
+		pro := rocket.Consumer{}
+		pro.PushConsumerStart()
+		//pro.PullConsumerStart()
+		c.JSON(http.StatusOK, "get msg success")
+	})
+
+	defer func() {
+		core.Stop()
+	}()
+
+	err := endless.ListenAndServe(":8050", r)
+	if err != nil {
+		core.Stop()
+		log.Fatalf("sever: %s\n", err)
 	}
+	log.Println("logout success")
 }
