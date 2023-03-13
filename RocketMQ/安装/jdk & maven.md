@@ -34,6 +34,12 @@ java version "1.8.0_321"
 Java(TM) SE Runtime Environment (build 1.8.0_321-b07)
 Java HotSpot(TM) 64-Bit Server VM (build 25.321-b07, mixed mode)
 ```
+## yum 安装
+````
+yum install -y java-1.8.0-openjdk-devel.x86_64     # 这里是适配 x86_64
+
+java -version
+````
 
 # [maven 安装](https://maven.apache.org/download.cgi)
 
